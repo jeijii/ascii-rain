@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<head>
+    <title>faulty systems</title>
+    <meta charset="utf-8"/>
+</head>
+<style>
+    html,body {
+        position: relative;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+    }
+    #main {
+        position: absolute;
+        height: 80%;
+        width: 80%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border: 1px solid black;
+    }
+    p {
+        padding: 0;
+        margin:  0;
+    }
+    h1 {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: "Times New Roman", Times, serif;
+        font-weight: normal;
+    }
+</style>
+<body>
+    <div id="main"></div>
+    <h1>ascii rain</h1>
+    <script>
+            let slowDrops = 3;
+            let fastDrops = 7;
+            let posInfo = document.getElementById("main").getBoundingClientRect();
+            let darkMode = false;
+
+            function createDrop(speed){
+                let choice = Math.floor(Math.random() * Math.floor(2));
+                let raindropType = ""
+                if(choice == 1){
+                    raindropType = "|"
+                }
+                else {
+                    raindropType = ":"
+                }
+                let x = Math.floor(Math.random() * Math.floor(posInfo.width));
+                let y = 0;
+                let node = document.createElement("p")
+                node.innerText = raindropType;
+                node.style.position = "fixed";
+                node.style.top = y + "px";
+                node.style.left= x + "px";
+                node.setAttribute("speed", speed);
+                if(!darkMode){
+                    node.style.color = "black";
+                }
+                else {
+                    node.style.color = "white";
+                }
+                document.getElementById("main").appendChild(node);
+            }
+
+            function update(){
+                for(let i = 0; i<slowDrops; i++){
+                    createDrop("slow");
+                }
+                for(let i = 0; i<fastDrops; i++){
+                    createDrop("fast");
+                }
+                let raindrops = document.getElementsByTagName("P");
+                for(let i = 0; i<raindrops.length; i++){
+                    if(raindrops[i].innerHTML == "*"){
+                        document.getElementById("main").removeChild(raindrops[i]);
+                    }
+                    currX = parseInt(raindrops[i].style.top);
+                    let speed = raindrops[i].getAttribute("speed");
+
+                    if (currX < Math.round(posInfo.height*0.95)){
+                        if (speed == "slow"){
+                            currX = currX + 10;
+                         }
+                        if (speed == "fast"){
+                            currX = currX + 20;
+                        }
+                        raindrops[i].style.top = currX + "px";
+                    }
+                    else {
+                        raindrops[i].innerHTML = "*"
+                    }
+                }
+
+            }
+
+            function load() {
+                animate()
+                console.log("https://github.com/jeijii/ascii-rain");
+            }
+            window.onload = load();
+            function animate(){
+                update();
+                requestAnimationFrame(animate);
+            }
+
+            document.addEventListener("click", function(){
+                if(darkMode){
+                    document.getElementsByTagName("H1")[0].style.color = "black";
+                    document.body.style.backgroundColor = "white";
+                    document.getElementById("main").style.border = "1px solid black";
+                }
+                if(!darkMode){
+                    document.getElementsByTagName("H1")[0].style.color = "white";
+                    document.body.style.backgroundColor = "black";
+                    document.getElementById("main").style.border = "1px solid white"; 
+                }
+                darkMode = !darkMode;
+            }); 
+
+            //jz 2019. Things i would rather do than paperwork.
+            </script>
+</body>
